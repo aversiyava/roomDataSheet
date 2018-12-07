@@ -4,7 +4,6 @@
 # This code is based on Family.InRoom node originally created
 # by Peter Kompolschek and published on Dynamo blog. Big thanks
 # to Peter for sharing his work so graciously.
-
 import clr
 import sys
 clr.AddReference('ProtoGeometry')
