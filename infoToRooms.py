@@ -35,6 +35,7 @@ app = uiapp.Application
 #The inputs to this node will be stored as a list in the IN variable.
 dataEnteringNode = IN
 
+
 def TryGetRoom(room, phase):
 	try:
 		inRoom = room.Room[phase]
