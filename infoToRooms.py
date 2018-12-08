@@ -1,4 +1,3 @@
-
 import clr
 import sys
 clr.AddReference('ProtoGeometry')
@@ -30,3 +29,12 @@ app = uiapp.Application
 #The inputs to this node will be stored as a list in the IN variable.
 
 rooms_collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms).WhereElementIsNotElementType().ToElements()
+
+t = Transaction(doc, "Comments in Rooms")
+
+t.Start()
+
+for room in rooms_collector:
+	comments_param = room.LookupParameter("Comments").Set("test")
+
+t.Commit()
