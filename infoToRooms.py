@@ -34,51 +34,5 @@ uiapp = DocumentManager.Instance.CurrentUIApplication
 app = uiapp.Application
 
 #The inputs to this node will be stored as a list in the IN variable.
-dataEnteringNode = IN
 
-
-def TryGetRoom(room, phase):
-	try:
-		inRoom = room.Room[phase]
-	except:
-		inRoom = None
-		pass
-	return inRoom
-
-def FamiliesInRoom(_room, _families, _doc):
-	outList = []
-	for family in _families:
-		pt = family.Location.Point
-		if _room.IsPointInRoom(pt):
-			outList.append(family)
-		else:
-			for phase in _doc.Phases:
-				inRoom = TryGetRoom(family, phase)
-				if inRoom != None and inRoom.ToDSType(True).Name == _room.ToDSType(True).Name:
-					outList.append(family)
-	return outList
-
-try:
-	errorReport = None
-	families = []
-	for i in IN[0]:
-		families.append(UnwrapElement(i))
-
-	rooms = []
-	for i in IN[1]:
-		if UnwrapElement(i).Area > 0:
-			rooms.append(UnwrapElement(i))
-
-	outData = [[] for i in range(len(rooms))]
-	for index, room in enumerate(rooms):
-		outData[index].extend(FamiliesInRoom(room, families, doc))
-except:
-	# if error accurs anywhere in the process catch it
-	import traceback
-	errorReport = traceback.format_exc()
-
-#Assign your output to the OUT variable
-if errorReport == None:
-	OUT = outData
-else:
-	OUT = errorReport
+rooms_collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms).WhereElementIsNotElementType().ToElements()
