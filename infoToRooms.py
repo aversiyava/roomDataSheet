@@ -10,6 +10,7 @@ sys.path.append(pyt_path)
 clr.AddReference("RevitNodes")
 import Revit
 clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
 
 # Import DocumentManager and TransactionManager
 clr.AddReference("RevitServices")
@@ -25,16 +26,15 @@ from Autodesk.Revit.DB import *
 doc = DocumentManager.Instance.CurrentDBDocument
 uiapp = DocumentManager.Instance.CurrentUIApplication
 app = uiapp.Application
+#The inputs to this node will be stored as a list in the IN variables.
+dataEnteringNode = IN
 
-#The inputs to this node will be stored as a list in the IN variable.
+revitLinkInstances = UnwrapElement(IN[0])
+view = UnwrapElement(IN[1])
+boundingBoxes = []
 
-rooms_collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms).WhereElementIsNotElementType().ToElements()
-
-t = Transaction(doc, "Comments in Rooms")
-
-t.Start()
-
-for room in rooms_collector:
-	comments_param = room.LookupParameter("Comments").Set("test")
-
-t.Commit()
+for container in revitLinkInstances:
+	bbxs = container.get_BoundingBox(view).ToProtoType()
+	boundingBoxes.append(bbxs)
+#Assign your output to the OUT variable.
+OUT = boundingBoxes
